@@ -18,3 +18,7 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Claude
+CLAUDE.md
+CLAUDE WEBDESIGN.md
