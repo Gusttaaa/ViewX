@@ -94,6 +94,17 @@ GET /api/reels?username={username}
 | 429 | Rate limit do Instagram — aguarde alguns minutos |
 | 500 | `INSTAGRAM_SESSION_ID` não configurado no ambiente |
 
+## Decisão de arquitetura — Por que cookies?
+
+Scraping autenticado do Instagram exige uma identidade válida. As alternativas consideradas foram:
+
+- **Requisições anônimas** — bloqueadas pelo Instagram na maioria dos endpoints de Reels
+- **Selenium / Playwright** — funcionam, mas exigem um browser headless rodando em produção: imagem Docker ~1 GB, consumo de memória alto, e a detecção de bots pelo Instagram é agressiva
+- **Serviços de proxy / SERP APIs** — resolvem o problema, mas são pagos e violam a regra do desafio de não usar Apify ou similar
+- **Cookies de sessão** — a mesma autenticação que o browser usa. Estável, leve, sem dependências extras
+
+A escolha pelos cookies foi deliberada: o custo é um passo manual de configuração no `.env`, mas em troca o scraper é estável, roda em qualquer ambiente sem infraestrutura adicional, e a imagem Docker fica abaixo de 200 MB. Em produção real, esse passo seria substituído por um fluxo OAuth ou uma conta de serviço dedicada.
+
 ## Abordagem de scraping
 
 A aplicação chama a mesma API REST interna que o frontend web do Instagram usa:
